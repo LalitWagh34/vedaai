@@ -71,8 +71,12 @@ export const startWorker = () => {
         temperature: 0.7,
       });
 
-      const raw = response.choices[0].message.content || "";
-      const parsed = JSON.parse(raw);
+        const raw = response.choices[0].message.content || "";
+        const cleaned = raw
+        .replace(/```json\n?/g, "")
+        .replace(/```\n?/g, "")
+        .trim();
+        const parsed = JSON.parse(cleaned);
 
       const paper = await GeneratedPaper.create({
         assignmentId,

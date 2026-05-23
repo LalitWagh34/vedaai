@@ -90,4 +90,23 @@ router.get("/:id/paper", async (req: Request, res: Response) => {
   }
 });
 
+router.post("/:id/retry", async (req: Request, res: Response) => {
+  try {
+    const assignment = await Assignment.findById(req.params.id);
+    if (!assignment) {
+      return res.status(404).json({ success: false, error: "Not found" });
+    }
+
+    await Assignment.findByIdAndUpdate(req.params.id, { status: "pending" });
+
+    const job = await assignmentQueue.add("generate", {
+      assignmentId: req.params.id,
+    });
+
+    res.json({ success: true, jobId: job.id });
+  } catch (error: any) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 export default router;
