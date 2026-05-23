@@ -31,7 +31,7 @@ const difficultyStyle = {
 
 export default function QuestionPaper({ paper }: { paper: Paper }) {
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-8 print:shadow-none">
+    <div id="question-paper" className="bg-white rounded-xl border border-gray-200 p-8 print:shadow-none">
       {/* Header */}
       <div className="text-center mb-6 border-b border-gray-200 pb-6">
         <h1 className="text-xl font-bold text-gray-900">{paper.schoolName}</h1>
@@ -86,7 +86,7 @@ export default function QuestionPaper({ paper }: { paper: Paper }) {
                     <p className="text-sm text-gray-800">{q.text}</p>
                     <div className="flex items-center gap-2 shrink-0">
                       <span
-                        className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                        className={`no-print text-xs px-2 py-0.5 rounded-full font-medium ${
                           difficultyStyle[q.difficulty]
                         }`}
                       >

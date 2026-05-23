@@ -52,7 +52,9 @@ const fetchPaper = async () => {
     }
     return false;
   };
-
+    const handleDownload = () => {
+      window.print();
+    };
   useEffect(() => {
     const start = async () => {
       const done = await fetchPaper();
@@ -116,11 +118,11 @@ const fetchPaper = async () => {
           {paper.className}
         </p>
         <button
-          onClick={() => window.print()}
-          className="flex items-center gap-2 bg-white text-gray-900 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors"
-        >
-          <Download size={14} />
-          Download as PDF
+            onClick={handleDownload}
+            className="flex items-center gap-2 bg-white text-gray-900 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors"
+            >
+            <Download size={14} />
+            Download as PDF
         </button>
       </div>
 

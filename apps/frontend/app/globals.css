@@ -28,3 +28,27 @@ body {
 input, textarea, select {
   color: #111827 !important;
 }
+
+@media print {
+  /* Hide everything except the paper */
+  body * {
+    visibility: hidden;
+  }
+
+  #question-paper, #question-paper * {
+    visibility: visible;
+  }
+
+  #question-paper {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    padding: 40px;
+  }
+
+  /* Hide difficulty badges in print */
+  .no-print {
+    display: none !important;
+  }
+}
