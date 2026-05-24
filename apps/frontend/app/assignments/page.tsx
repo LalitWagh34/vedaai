@@ -63,11 +63,27 @@ export default function AssignmentsPage() {
 
   if (assignments.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen gap-4">
-        <div className="w-32 h-32 bg-gray-100 rounded-full flex items-center justify-center">
-          <Search size={40} className="text-gray-300" />
+      <div className="flex flex-col items-center justify-center h-[80vh] gap-4">
+        <div className="relative w-48 h-48">
+          <div className="absolute inset-0 bg-gray-100 rounded-full" />
+          <div className="absolute inset-4 bg-white rounded-xl shadow-sm flex items-center justify-center">
+            <div className="relative">
+              <div className="w-16 h-20 bg-gray-100 rounded-lg border border-gray-200 flex flex-col gap-1.5 p-2">
+                <div className="h-1.5 bg-gray-300 rounded w-full" />
+                <div className="h-1.5 bg-gray-300 rounded w-3/4" />
+                <div className="h-1.5 bg-gray-300 rounded w-full" />
+                <div className="h-1.5 bg-gray-300 rounded w-1/2" />
+              </div>
+              <div className="absolute -bottom-3 -right-3 w-10 h-10 bg-white rounded-full border-2 border-gray-100 flex items-center justify-center shadow">
+                <span className="text-red-500 text-lg font-bold">✕</span>
+              </div>
+            </div>
+          </div>
+          <div className="absolute top-2 right-6 w-3 h-3 bg-pink-400 rotate-45" />
+          <div className="absolute bottom-6 left-2 w-2 h-2 bg-blue-400 rounded-full" />
+          <div className="absolute top-8 left-4 w-1.5 h-1.5 bg-yellow-400 rounded-full" />
         </div>
-        <h2 className="text-xl font-semibold text-gray-800">No assignments yet</h2>
+        <h2 className="text-lg font-semibold text-gray-800">No assignments yet</h2>
         <p className="text-gray-500 text-sm text-center max-w-sm">
           Create your first assignment to start collecting and grading student
           submissions. You can set up rubrics, define marking criteria, and let
