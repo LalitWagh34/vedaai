@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import api from "@/lib/api";
 import QuestionPaper from "@/components/assignments/QuestionPaper";
 import { Download, RefreshCw } from "lucide-react";
+import { io } from "socket.io-client";
 
 interface Question {
   text: string;
@@ -56,25 +57,64 @@ const fetchPaper = async () => {
       window.print();
     };
   useEffect(() => {
+    let interval: NodeJS.Timeout;
+    let timeout: NodeJS.Timeout;
+
     const start = async () => {
       const done = await fetchPaper();
       if (done) return;
 
       setStatus("processing");
 
-      const interval = setInterval(async () => {
+      const socket = io(
+        process.env.NEXT_PUBLIC_WS_URL || "http://localhost:4000"
+      );
+
+      socket.on("connect", () => {
+        const jobId = new URLSearchParams(window.location.search).get("jobId");
+        if (jobId) socket.emit("join:job", jobId);
+      });
+
+      socket.on("job:complete", async () => {
+        clearInterval(interval);
+        clearTimeout(timeout);
+        await fetchPaper();
+        socket.disconnect();
+      });
+
+      socket.on("job:status", (data) => {
+        if (data.status === "failed") {
+          clearInterval(interval);
+          clearTimeout(timeout);
+          setStatus("failed");
+          setError(data.error);
+          socket.disconnect();
+        }
+      });
+
+      interval = setInterval(async () => {
         const done = await fetchPaper();
-        if (done) clearInterval(interval);
+        if (done) {
+          clearInterval(interval);
+          clearTimeout(timeout);
+          socket.disconnect();
+        }
       }, 3000);
 
-      setTimeout(() => {
+      timeout = setTimeout(() => {
         clearInterval(interval);
         setStatus("failed");
         setError("Generation timed out. Please try again.");
+        socket.disconnect();
       }, 120000);
     };
 
     start();
+
+    return () => {
+      clearInterval(interval);
+      clearTimeout(timeout);
+    };
   }, [id]);
 
   if (status === "loading" || status === "processing") {
@@ -109,7 +149,7 @@ const fetchPaper = async () => {
   if (!paper) return null;
 
   return (
-    <div className="p-4 md:p-6 max-w-4xl mx-autop-6 max-w-4xl mx-auto">
+    <div className="p-4 md:p-6 max-w-4xl mx-auto">
       {/* AI Message */}
       <div className="bg-gray-900 text-white rounded-xl p-4 mb-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
         <p className="text-sm">

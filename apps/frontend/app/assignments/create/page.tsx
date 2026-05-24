@@ -12,11 +12,40 @@ export default function CreateAssignmentPage() {
   const { form, currentStep, setStep, setJobId, setJobStatus, setIsSubmitting, isSubmitting } =
     useAssignmentStore();
 
-  const handleNext = () => setStep(2);
+const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const handleNext = () => {
+    const newErrors: Record<string, string> = {};
+    if (!form.title.trim()) newErrors.title = "Title is required";
+    if (!form.subject.trim()) newErrors.subject = "Subject is required";
+    if (!form.className.trim()) newErrors.className = "Class is required";
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+    setErrors({});
+    setStep(2);
+  };
   const handlePrev = () => setStep(1);
 
   const handleSubmit = async () => {
+    if (form.questionTypes.length === 0) {
+    alert("Please add at least one question type");
+    return;
+  }
+  if (!form.dueDate) {
+    alert("Please select a due date");
+    return;
+  }
+  const hasInvalid = form.questionTypes.some(
+    (qt) => qt.numberOfQuestions < 1 || qt.marks < 1
+  );
+  if (hasInvalid) {
+    alert("Questions and marks must be greater than 0");
+    return;
+  }
     try {
+    
       setIsSubmitting(true);
       const payload = {
         title: form.title,
@@ -73,7 +102,7 @@ export default function CreateAssignmentPage() {
       </div>
 
       {/* Steps */}
-      {currentStep === 1 ? <StepOne /> : <StepTwo />}
+      {currentStep === 1 ? <StepOne errors={errors} /> : <StepTwo />} {currentStep === 1 ? <StepOne errors={errors} /> : <StepTwo />}{currentStep === 1 ? <StepOne errors={errors} /> : <StepTwo />}
 
       {/* Navigation */}
       <div className="flex justify-between mt-6">

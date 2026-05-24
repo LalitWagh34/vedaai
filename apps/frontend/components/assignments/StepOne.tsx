@@ -1,7 +1,7 @@
 "use client";
 import { useAssignmentStore } from "@/store/assignmentStore";
 
-export default function StepOne() {
+export default function StepOne({ errors }: { errors: Record<string, string> }) {
   const { form, setForm } = useAssignmentStore();
 
   return (
@@ -21,8 +21,13 @@ export default function StepOne() {
             placeholder="e.g. Quiz on Electricity"
             value={form.title}
             onChange={(e) => setForm({ title: e.target.value })}
-            className="w-full px-3 py-2 text-sm text-gray-900 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-200"
+            className={`w-full px-3 py-2 text-sm text-gray-900 border rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-200 ${
+              errors.title ? "border-red-400" : "border-gray-200"
+            }`}
           />
+          {errors.title && (
+            <p className="text-xs text-red-500 mt-1">{errors.title}</p>
+          )}
         </div>
 
         <div>
@@ -34,8 +39,13 @@ export default function StepOne() {
             placeholder="e.g. Science"
             value={form.subject}
             onChange={(e) => setForm({ subject: e.target.value })}
-            className="w-full px-3 py-2 text-sm text-gray-900 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-200"
+            className={`w-full px-3 py-2 text-sm text-gray-900 border rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-200 ${
+              errors.subject ? "border-red-400" : "border-gray-200"
+            }`}
           />
+          {errors.subject && (
+            <p className="text-xs text-red-500 mt-1">{errors.subject}</p>
+          )}
         </div>
 
         <div>
@@ -47,8 +57,13 @@ export default function StepOne() {
             placeholder="e.g. 8th"
             value={form.className}
             onChange={(e) => setForm({ className: e.target.value })}
-            className="w-full px-3 py-2 text-gray-900 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-200"
+            className={`w-full px-3 py-2 text-sm text-gray-900 border rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-200 ${
+              errors.className ? "border-red-400" : "border-gray-200"
+            }`}
           />
+          {errors.className && (
+            <p className="text-xs text-red-500 mt-1">{errors.className}</p>
+          )}
         </div>
       </div>
     </div>
