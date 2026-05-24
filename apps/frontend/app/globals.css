@@ -30,24 +30,20 @@ input, textarea, select {
 }
 
 @media print {
-  /* Hide everything except the paper */
-  body * {
-    visibility: hidden;
+  body > * {
+    display: none !important;
   }
 
-  #question-paper, #question-paper * {
-    visibility: visible;
-  }
-
-  #question-paper {
-    position: absolute;
-    left: 0;
+  #question-paper-wrapper {
+    display: block !important;
+    position: fixed;
     top: 0;
+    left: 0;
     width: 100%;
     padding: 40px;
+    background: white;
   }
 
-  /* Hide difficulty badges in print */
   .no-print {
     display: none !important;
   }

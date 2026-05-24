@@ -178,7 +178,9 @@ const fetchPaper = async () => {
       </div>
 
       {/* Question Paper */}
-      <QuestionPaper paper={paper} />
+      <div id="question-paper-wrapper">
+        <QuestionPaper paper={paper} />
+      </div>
     </div>
   );
 }
