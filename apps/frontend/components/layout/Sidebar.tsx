@@ -23,70 +23,113 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="w-[200px] min-h-screen bg-white border-r border-gray-200 flex flex-col fixed left-0 top-0">
-      {/* Logo */}
-      <div className="p-4 border-b border-gray-100">
+    <>
+      {/* Desktop Sidebar */}
+      <aside className="hidden md:flex w-[200px] min-h-screen bg-white border-r border-gray-200 flex-col fixed left-0 top-0">
+        {/* Logo */}
+        <div className="p-4 border-b border-gray-100">
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 bg-orange-500 rounded-md flex items-center justify-center">
+              <span className="text-white text-xs font-bold">V</span>
+            </div>
+            <span className="font-semibold text-gray-900">VedaAI</span>
+          </div>
+        </div>
+
+        {/* Create Assignment Button */}
+        <div className="p-3">
+          <Link
+            href="/assignments/create"
+            className="flex items-center gap-2 bg-gray-900 text-white rounded-full px-3 py-2 text-sm w-full hover:bg-gray-700 transition-colors"
+          >
+            <Plus size={14} />
+            Create Assignment
+          </Link>
+        </div>
+
+        {/* Nav Items */}
+        <nav className="flex-1 px-2 py-2">
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            const isActive =
+              pathname === item.href ||
+              (item.href !== "/" && pathname.startsWith(item.href));
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm mb-1 transition-colors ${
+                  isActive
+                    ? "bg-gray-100 text-gray-900 font-medium"
+                    : "text-gray-600 hover:bg-gray-50"
+                }`}
+              >
+                <Icon size={15} />
+                {item.label}
+              </Link>
+            );
+          })}
+        </nav>
+
+        {/* Bottom */}
+        <div className="p-3 border-t border-gray-100">
+          <Link
+            href="/settings"
+            className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-50"
+          >
+            <Settings size={15} />
+            Settings
+          </Link>
+          <div className="flex items-center gap-2 px-3 py-2 mt-1">
+            <div className="w-7 h-7 rounded-full bg-orange-100 flex items-center justify-center">
+              <span className="text-xs font-medium text-orange-600">D</span>
+            </div>
+            <div>
+              <p className="text-xs font-medium text-gray-900">Delhi Public School</p>
+              <p className="text-xs text-gray-500">Bokaro Steel City</p>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      {/* Mobile Top Bar */}
+      <div className="md:hidden fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-50 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 bg-orange-500 rounded-md flex items-center justify-center">
             <span className="text-white text-xs font-bold">V</span>
           </div>
           <span className="font-semibold text-gray-900">VedaAI</span>
         </div>
-      </div>
-
-      {/* Create Assignment Button */}
-      <div className="p-3">
         <Link
           href="/assignments/create"
-          className="flex items-center gap-2 bg-gray-900 text-white rounded-full px-3 py-2 text-sm w-full hover:bg-gray-700 transition-colors"
+          className="flex items-center gap-1 bg-gray-900 text-white rounded-full px-3 py-1.5 text-xs"
         >
-          <Plus size={14} />
-          Create Assignment
+          <Plus size={12} />
+          Create
         </Link>
       </div>
 
-      {/* Nav Items */}
-      <nav className="flex-1 px-2 py-2">
-        {navItems.map((item) => {
+      {/* Mobile Bottom Nav */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 flex items-center justify-around px-2 py-2">
+        {navItems.slice(0, 4).map((item) => {
           const Icon = item.icon;
-          const isActive = pathname === item.href ||
+          const isActive =
+            pathname === item.href ||
             (item.href !== "/" && pathname.startsWith(item.href));
           return (
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm mb-1 transition-colors ${
-                isActive
-                  ? "bg-gray-100 text-gray-900 font-medium"
-                  : "text-gray-600 hover:bg-gray-50"
+              className={`flex flex-col items-center gap-0.5 px-3 py-1 rounded-lg ${
+                isActive ? "text-gray-900" : "text-gray-400"
               }`}
             >
-              <Icon size={15} />
-              {item.label}
+              <Icon size={18} />
+              <span className="text-[10px]">{item.label.split(" ")[0]}</span>
             </Link>
           );
         })}
-      </nav>
-
-      {/* Bottom */}
-      <div className="p-3 border-t border-gray-100">
-        <Link
-          href="/settings"
-          className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-50"
-        >
-          <Settings size={15} />
-          Settings
-        </Link>
-        <div className="flex items-center gap-2 px-3 py-2 mt-1">
-          <div className="w-7 h-7 rounded-full bg-orange-100 flex items-center justify-center">
-            <span className="text-xs font-medium text-orange-600">D</span>
-          </div>
-          <div>
-            <p className="text-xs font-medium text-gray-900">Delhi Public School</p>
-            <p className="text-xs text-gray-500">Bokaro Steel City</p>
-          </div>
-        </div>
       </div>
-    </aside>
+    </>
   );
 }

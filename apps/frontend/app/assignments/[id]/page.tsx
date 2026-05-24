@@ -109,9 +109,9 @@ const fetchPaper = async () => {
   if (!paper) return null;
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
+    <div className="p-4 md:p-6 max-w-4xl mx-autop-6 max-w-4xl mx-auto">
       {/* AI Message */}
-      <div className="bg-gray-900 text-white rounded-xl p-4 mb-6 flex items-center justify-between">
+      <div className="bg-gray-900 text-white rounded-xl p-4 mb-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
         <p className="text-sm">
           Here is your customized Question Paper for{" "}
           <span className="font-semibold">{paper.subject}</span> — Class{" "}
