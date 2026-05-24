@@ -5,8 +5,13 @@ export let io: Server;
 export const initSocket = (httpServer: any) => {
   io = new Server(httpServer, {
     cors: {
-      origin: process.env.CLIENT_URL || "http://localhost:3000",
+      origin: [
+        "http://localhost:3000",
+        "https://vedaai-frontend-six.vercel.app",
+        /\.vercel\.app$/
+      ],
       methods: ["GET", "POST"],
+      credentials: true,
     },
   });
 
