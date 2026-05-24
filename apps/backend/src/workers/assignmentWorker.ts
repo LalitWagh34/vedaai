@@ -14,7 +14,7 @@ const buildPrompt = (data: any): string => {
     )
     .join("\n");
 
-  return `You are an expert teacher creating a question paper.
+return `You are an expert teacher creating a question paper.
 Create a structured question paper with the following requirements:
 
 Subject: ${data.subject}
@@ -42,7 +42,9 @@ Respond ONLY with valid JSON in this exact format, no markdown, no explanation:
       ]
     }
   ]
-}`;
+}
+
+IMPORTANT: difficulty must be ONLY one of these exact values: "easy", "moderate", "hard". Never use "medium".`;
 };
 
 export const startWorker = () => {
@@ -78,6 +80,13 @@ export const startWorker = () => {
         .trim();
         const parsed = JSON.parse(cleaned);
 
+parsed.sections = parsed.sections.map((section: any) => ({
+  ...section,
+  questions: section.questions.map((q: any) => ({
+    ...q,
+    difficulty: q.difficulty === "medium" ? "moderate" : q.difficulty,
+  })),
+}));
       const paper = await GeneratedPaper.create({
         assignmentId,
         subject: assignment.subject,
