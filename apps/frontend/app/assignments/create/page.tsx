@@ -102,8 +102,8 @@ const [errors, setErrors] = useState<Record<string, string>>({});
       </div>
 
       {/* Steps */}
-      {currentStep === 1 ? <StepOne errors={errors} /> : <StepTwo />} {currentStep === 1 ? <StepOne errors={errors} /> : <StepTwo />}{currentStep === 1 ? <StepOne errors={errors} /> : <StepTwo />}
-
+      
+      {currentStep === 1 ? <StepOne errors={errors} /> : <StepTwo />}
       {/* Navigation */}
       <div className="flex justify-between mt-6">
         {currentStep === 2 ? (
