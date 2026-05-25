@@ -55,52 +55,56 @@ function AssignmentOutput() {
     return false;
   };
 
-  const handleDownload = async () => {
-    const element = document.getElementById("question-paper-wrapper");
-    if (!element) return;
+const handleDownload = async () => {
+  const element = document.getElementById("question-paper-wrapper");
+  if (!element) {
+    alert("Element not found!");
+    return;
+  }
 
-    setDownloading(true);
-    try {
-      const html2canvas = (await import("html2canvas")).default;
-      const jsPDF = (await import("jspdf")).default;
+  setDownloading(true);
+  try {
+    const { toPng } = await import("html-to-image");
+    const jsPDF = (await import("jspdf")).default;
 
-      const canvas = await html2canvas(element, {
-        scale: 2,
-        useCORS: true,
-        backgroundColor: "#ffffff",
-        logging: false,
-      });
+    const dataUrl = await toPng(element, {
+      cacheBust: true,
+      pixelRatio: 2,
+      backgroundColor: "#ffffff",
+    });
 
-      const imgData = canvas.toDataURL("image/jpeg", 0.98);
-      const pdf = new jsPDF({
-        orientation: "portrait",
-        unit: "mm",
-        format: "a4",
-      });
+    const img = new Image();
+    img.src = dataUrl;
+    await new Promise((res) => (img.onload = res));
 
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const pageHeight = pdf.internal.pageSize.getHeight();
-      const imgWidth = pageWidth;
-      const imgHeight = (canvas.height * pageWidth) / canvas.width;
+    const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
 
-      let heightLeft = imgHeight;
-      let position = 0;
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+    const imgWidth = pageWidth;
+    const imgHeight = (img.height * pageWidth) / img.width;
 
-      pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
+    let heightLeft = imgHeight;
+    let position = 0;
+
+    pdf.addImage(dataUrl, "PNG", 0, position, imgWidth, imgHeight);
+    heightLeft -= pageHeight;
+
+    while (heightLeft > 0) {
+      position -= pageHeight;
+      pdf.addPage();
+      pdf.addImage(dataUrl, "PNG", 0, position, imgWidth, imgHeight);
       heightLeft -= pageHeight;
-
-      while (heightLeft > 0) {
-        position -= pageHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
-      }
-
-      pdf.save(`${paper?.subject}-${paper?.className}.pdf`);
-    } finally {
-      setDownloading(false);
     }
-  };
+
+    pdf.save(`${paper?.subject}-${paper?.className}.pdf`);
+  } catch (err) {
+    console.error("PDF error:", err);
+    alert("Error generating PDF: " + err);
+  } finally {
+    setDownloading(false);
+  }
+};
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
