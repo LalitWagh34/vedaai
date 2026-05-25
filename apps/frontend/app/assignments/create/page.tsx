@@ -75,7 +75,7 @@ const [errors, setErrors] = useState<Record<string, string>>({});
   };
 
   return (
-    <div className="p-4 md:p-6 max-w-3xl mx-auto">
+    <div className="p-4 md:p-6 max-w-3xl mx-auto overflow-x-hidden w-full">
       {/* Header */}
       <div className="mb-6">
         <div className="flex items-center gap-2 mb-1">
