@@ -31,7 +31,7 @@ const difficultyStyle = {
 
 export default function QuestionPaper({ paper }: { paper: Paper }) {
   return (
-    <div id="question-paper" className="bg-white rounded-xl border border-gray-200 p-8 print:shadow-none">
+    <div id="question-paper" className="bg-white rounded-xl border border-gray-200 p-4 md:p-8 print:shadow-none">
       {/* Header */}
       <div className="text-center mb-6 border-b border-gray-200 pb-6">
         <h1 className="text-xl font-bold text-gray-900">{paper.schoolName}</h1>
@@ -50,18 +50,18 @@ export default function QuestionPaper({ paper }: { paper: Paper }) {
       </p>
 
       {/* Student Info */}
-      <div className="flex gap-8 mb-8 text-sm text-gray-700">
+      <div className="flex flex-wrap gap-4 mb-8 text-sm text-gray-700">
         <p>
           Name:{" "}
-          <span className="inline-block border-b border-gray-400 w-32">&nbsp;</span>
-        </p>
-        <p>
-          Roll Number:{" "}
           <span className="inline-block border-b border-gray-400 w-24">&nbsp;</span>
         </p>
         <p>
+          Roll Number:{" "}
+          <span className="inline-block border-b border-gray-400 w-20">&nbsp;</span>
+        </p>
+        <p>
           Section:{" "}
-          <span className="inline-block border-b border-gray-400 w-16">&nbsp;</span>
+          <span className="inline-block border-b border-gray-400 w-12">&nbsp;</span>
         </p>
       </div>
 
@@ -81,8 +81,8 @@ export default function QuestionPaper({ paper }: { paper: Paper }) {
                 <span className="text-sm text-gray-700 font-medium min-w-[20px]">
                   {qi + 1}.
                 </span>
-                <div className="flex-1">
-                  <div className="flex items-start justify-between gap-4">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-start justify-between gap-2 flex-wrap">
                     <p className="text-sm text-gray-800">{q.text}</p>
                     <div className="flex items-center gap-2 shrink-0">
                       <span
