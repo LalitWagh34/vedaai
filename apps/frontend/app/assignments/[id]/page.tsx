@@ -5,6 +5,7 @@ import api from "@/lib/api";
 import QuestionPaper from "@/components/assignments/QuestionPaper";
 import { Download, RefreshCw } from "lucide-react";
 import { io } from "socket.io-client";
+import html2pdf from "html2pdf.js";
 
 interface Question {
   text: string;
@@ -54,10 +55,18 @@ const fetchPaper = async () => {
     return false;
   };
 const handleDownload = () => {
-  // Small delay ensures layout is ready before print dialog on mobile
-  setTimeout(() => {
-    window.print();
-  }, 100);
+  const element = document.getElementById("question-paper");
+  if (!element) return;
+
+  const opt = {
+    margin: 10,
+    filename: `${paper?.subject}-${paper?.className}.pdf`,
+    image: { type: "jpeg" as const, quality: 0.98 },
+    html2canvas: { scale: 2, useCORS: true, backgroundColor: "#ffffff" },
+    jsPDF: { unit: "mm" as const, format: "a4", orientation: "portrait" as const },
+  };
+
+  html2pdf().set(opt).from(element).save();
 };
   useEffect(() => {
     let interval: NodeJS.Timeout;
