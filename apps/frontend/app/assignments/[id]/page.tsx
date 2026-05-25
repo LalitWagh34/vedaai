@@ -5,7 +5,7 @@ import api from "@/lib/api";
 import QuestionPaper from "@/components/assignments/QuestionPaper";
 import { Download, RefreshCw } from "lucide-react";
 import { io } from "socket.io-client";
-import html2pdf from "html2pdf.js";
+
 
 interface Question {
   text: string;
@@ -54,9 +54,11 @@ const fetchPaper = async () => {
     }
     return false;
   };
-const handleDownload = () => {
+const handleDownload = async () => {
   const element = document.getElementById("question-paper");
   if (!element) return;
+
+  const html2pdf = (await import("html2pdf.js")).default;
 
   const opt = {
     margin: 10,
