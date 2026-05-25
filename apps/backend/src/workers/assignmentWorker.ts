@@ -64,6 +64,7 @@ export const startWorker = () => {
 
       const assignment = await Assignment.findById(assignmentId);
       if (!assignment) throw new Error("Assignment not found");
+      console.log("Processing assignment:", assignmentId, assignment.subject);
 
       const prompt = buildPrompt(assignment);
 
@@ -115,7 +116,9 @@ parsed.sections = parsed.sections.map((section: any) => ({
     }
   );
 
-  worker.on("failed", async (job, err) => {
+worker.on("failed", async (job, err) => {
+    console.error("Job failed:", err.message);
+    console.error("Full error:", err);
     if (job) {
       await Assignment.findByIdAndUpdate(job.data.assignmentId, {
         status: "failed",
