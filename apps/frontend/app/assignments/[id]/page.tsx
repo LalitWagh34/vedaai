@@ -6,7 +6,6 @@ import QuestionPaper from "@/components/assignments/QuestionPaper";
 import { Download, RefreshCw } from "lucide-react";
 import { io } from "socket.io-client";
 
-
 interface Question {
   text: string;
   difficulty: "easy" | "moderate" | "hard";
@@ -38,8 +37,9 @@ function AssignmentOutput() {
   const [paper, setPaper] = useState<Paper | null>(null);
   const [status, setStatus] = useState<"loading" | "processing" | "completed" | "failed">("loading");
   const [error, setError] = useState<string | null>(null);
+  const [downloading, setDownloading] = useState(false);
 
-const fetchPaper = async () => {
+  const fetchPaper = async () => {
     try {
       const res = await api.get(`/api/assignments/${id}/paper`);
       console.log("Paper response:", res.data);
@@ -54,22 +54,54 @@ const fetchPaper = async () => {
     }
     return false;
   };
-const handleDownload = async () => {
-  const element = document.getElementById("question-paper");
-  if (!element) return;
 
-  const html2pdf = (await import("html2pdf.js")).default;
+  const handleDownload = async () => {
+    const element = document.getElementById("question-paper-wrapper");
+    if (!element) return;
 
-  const opt = {
-    margin: 10,
-    filename: `${paper?.subject}-${paper?.className}.pdf`,
-    image: { type: "jpeg" as const, quality: 0.98 },
-    html2canvas: { scale: 2, useCORS: true, backgroundColor: "#ffffff" },
-    jsPDF: { unit: "mm" as const, format: "a4", orientation: "portrait" as const },
+    setDownloading(true);
+    try {
+      const html2canvas = (await import("html2canvas")).default;
+      const jsPDF = (await import("jspdf")).default;
+
+      const canvas = await html2canvas(element, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: "#ffffff",
+        logging: false,
+      });
+
+      const imgData = canvas.toDataURL("image/jpeg", 0.98);
+      const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "mm",
+        format: "a4",
+      });
+
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const imgWidth = pageWidth;
+      const imgHeight = (canvas.height * pageWidth) / canvas.width;
+
+      let heightLeft = imgHeight;
+      let position = 0;
+
+      pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+
+      while (heightLeft > 0) {
+        position -= pageHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+
+      pdf.save(`${paper?.subject}-${paper?.className}.pdf`);
+    } finally {
+      setDownloading(false);
+    }
   };
 
-  html2pdf().set(opt).from(element).save();
-};
   useEffect(() => {
     let interval: NodeJS.Timeout;
     let timeout: NodeJS.Timeout;
@@ -172,11 +204,12 @@ const handleDownload = async () => {
           {paper.className}
         </p>
         <button
-            onClick={handleDownload}
-            className="flex items-center gap-2 bg-white text-gray-900 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors"
-            >
-            <Download size={14} />
-            Download as PDF
+          onClick={handleDownload}
+          disabled={downloading}
+          className="flex items-center gap-2 bg-white text-gray-900 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors disabled:opacity-60"
+        >
+          <Download size={14} />
+          {downloading ? "Generating..." : "Download as PDF"}
         </button>
       </div>
 
