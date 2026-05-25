@@ -204,15 +204,16 @@ export default function AssignmentsPage() {
       </div>
 
       {/* Floating create button */}
-      <div className="fixed bottom-24 md:bottom-6 left-1/2 -translate-x-1/2 z-40">
-        <Link
-          href="/assignments/create"
-          className="flex items-center gap-2 bg-gray-900 text-white rounded-full px-5 py-2.5 text-sm shadow-lg hover:bg-gray-700 transition-colors"
-        >
-          <Plus size={14} />
-          Create Assignment
-        </Link>
-      </div>
+{/* Floating create button */}
+ <div className="hidden md:flex fixed bottom-6 left-1/2 -translate-x-1/2 z-40">
+    <Link
+      href="/assignments/create"
+      className="flex items-center gap-2 bg-gray-900 text-white rounded-full px-5 py-2.5 text-sm shadow-lg hover:bg-gray-700 transition-colors"
+    >
+      <Plus size={14} />
+      Create Assignment
+    </Link>
+  </div>
     </div>
   );
 }
