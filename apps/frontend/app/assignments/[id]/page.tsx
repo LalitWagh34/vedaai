@@ -53,9 +53,12 @@ const fetchPaper = async () => {
     }
     return false;
   };
-    const handleDownload = () => {
-      window.print();
-    };
+const handleDownload = () => {
+  // Small delay ensures layout is ready before print dialog on mobile
+  setTimeout(() => {
+    window.print();
+  }, 100);
+};
   useEffect(() => {
     let interval: NodeJS.Timeout;
     let timeout: NodeJS.Timeout;
